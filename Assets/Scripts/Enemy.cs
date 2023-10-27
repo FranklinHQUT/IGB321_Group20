@@ -8,6 +8,12 @@ public class Enemy : MonoBehaviour {
     NavMeshAgent agent;
     Animator animator;
 
+    // Animations
+    int isMovingHash;
+    int isAttackingHash;
+
+    float distToPlayer;
+
     public float stoppingDistance; // 1 for melee so no clip, 5-10 for ranged??
 
     public GameObject player;
@@ -21,45 +27,44 @@ public class Enemy : MonoBehaviour {
     private float adjRotSpeed;
     public Quaternion targetRotation;
 
-    // Laser Damage
-    public GameObject laser;
-    public GameObject laserMuzzle;
-    private float laserTimer;
-    private float laserTime = 1.0f;
+    // Damage
+    private float meleeTimer;
+    private float meleeTime = 1.0f;
 
     // Collision Damage
     private float damageTimer;
     private float damageTime = 0.5f;
 
-    public GameObject burning;
-    public GameObject explosion;
-
-    // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponentInChildren<Animator>(); // Get the Animator component from a child object.
+        animator = GetComponentInChildren<Animator>();
+
+        // Animations
+        isMovingHash = Animator.StringToHash("Run");
+        isAttackingHash = Animator.StringToHash("Atack_0");
+
+        if (!player) { player = GameObject.FindGameObjectWithTag("Player"); }
+
     }
 
-    // Update is called once per frame
     void Update() {
         Behaviour();
 
         // Kill check - moved from takeDamage due to bug
         if (health <= 0) {
-            Instantiate(explosion, transform.position, transform.rotation);
             Destroy(this.gameObject);
         }
     }
 
     void Behaviour() {
-        if (!player)
-            player = GameObject.FindGameObjectWithTag("Player");
-        else if (player && !GameManager.instance.playerDead) {
+        if (player && !GameManager.instance.playerDead) {
             
             // Raycast in direction of Player
             RaycastHit hit;
             if (Physics.Raycast(transform.position, -(transform.position - player.transform.position).normalized, out hit, agroRange)) {
                 // If Raycast hits player
+                distToPlayer = (Vector3.Distance(player.transform.position, transform.position));
+
                 if (hit.transform.tag == "Player") {
                     Debug.DrawLine(transform.position, player.transform.position, Color.red);
                     // Rotate slowly towards player
@@ -67,35 +72,31 @@ public class Enemy : MonoBehaviour {
                     adjRotSpeed = Mathf.Min(rotationSpeed * Time.deltaTime, 1);
                     transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, adjRotSpeed);
                     // Move towards player
-                    if (Vector3.Distance(player.transform.position, transform.position) >= stoppingDistance) {
+                    if (distToPlayer >= stoppingDistance) {
                         agent.SetDestination(player.transform.position);
-                        // Set "Run" parameter to true in the Animator
-                        animator.SetBool("Run", true);
+                        animator.SetBool(isMovingHash, true);
                     }
                     // Stop if close to player
-                    else if (Vector3.Distance(player.transform.position, transform.position) < stoppingDistance) {
+                    else if (distToPlayer < stoppingDistance) { // if distance is less than stopping distance
                         agent.SetDestination(transform.position);
-                        // Set "Run" parameter to false in the Animator
-                        animator.SetBool("Run", false);
+                        animator.SetBool(isMovingHash, false);
+
+                        // attack
+                        animator.SetBool(isAttackingHash, true);
+                        if (Time.time > damageTimer)
+                        {
+                            hit.transform.GetComponent<PlayerController>().takeDamage(damage);
+                            damageTimer = Time.time + meleeTime;;
+
+                        }
+                        else { animator.SetBool(isAttackingHash, false); }
                     }
-                    // Fire Laser
-                    // if (Time.time > laserTimer) {
-                    //     Instantiate(laser, laserMuzzle.transform.position, laserMuzzle.transform.rotation);
-                    //     laserTimer = Time.time + laserTime;
-                    // }
                 }
             }
             else {
                 // If the player is not in agro range, set "Run" parameter to false.
-                animator.SetBool("Run", false);
+                animator.SetBool(isMovingHash, false);
             }
-        }
-    }
-
-    private void OnCollisionStay(Collision collision) {
-        if (collision.transform.tag == "Player" && Time.time > damageTimer) {
-            collision.transform.GetComponent<PlayerAvatar>().takeDamage(damage);
-            damageTimer = Time.time + damageTime;
         }
     }
 

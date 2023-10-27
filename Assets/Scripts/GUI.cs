@@ -8,8 +8,6 @@ public class GUI : MonoBehaviour {
     GameObject player;
 
     public Slider healthbar;
-    public Text ammoText;
-    public Text fuelText;
     public GameObject levelCompleteText;
 
 	// Use this for initialization
@@ -26,8 +24,6 @@ public class GUI : MonoBehaviour {
         }
         else if (player) {
             healthbar.value = player.GetComponent<PlayerAvatar>().health;
-            ammoText.text = "Ammo: " + player.GetComponent<PlayerAvatar>().ammo.ToString();
-            fuelText.text = "Fuel: " + player.GetComponent<PlayerAvatar>().fuel.ToString();
         }
 
 

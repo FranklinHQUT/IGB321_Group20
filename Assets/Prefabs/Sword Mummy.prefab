@@ -118,17 +118,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec62dada8c408834a8ff7945e57a77fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stoppingDistance: 1
+  stoppingDistance: 2
   player: {fileID: 0}
   health: 10
   agroRange: 30
   damage: 5
   rotationSpeed: 5
-  targetRotation: {x: 0, y: 0, z: 0, w: 0}
-  laser: {fileID: 0}
-  laserMuzzle: {fileID: 0}
-  burning: {fileID: 0}
-  explosion: {fileID: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1001 &4622467143417156801
 PrefabInstance:
   m_ObjectHideFlags: 0
