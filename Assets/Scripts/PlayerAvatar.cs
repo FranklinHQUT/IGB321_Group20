@@ -47,45 +47,45 @@ public class PlayerAvatar : MonoBehaviour {
     }
 
     void Shooting() {
-        //Left Mouse Button
-        if (Input.GetMouseButton(0) && ammo >= 1) {
+        // //Left Mouse Button
+        // if (Input.GetMouseButton(0) && ammo >= 1) {
 
-            muzzleFlash.SetActive(true);
+        //     muzzleFlash.SetActive(true);
 
-            if (Time.time > MGFireTimer) {
-                Instantiate(bullet, muzzleFlash.transform.position, transform.rotation);
-                ammo -= 1;
-                MGFireTimer = Time.time + MGFireTime;
-            }
+        //     if (Time.time > MGFireTimer) {
+        //         Instantiate(bullet, muzzleFlash.transform.position, transform.rotation);
+        //         ammo -= 1;
+        //         MGFireTimer = Time.time + MGFireTime;
+        //     }
 
-            anim.SetBool("Shooting", true);
-        }
-        else {
-            muzzleFlash.SetActive(false);
-            anim.SetBool("Shooting", false);
-        }
+        //     anim.SetBool("Shooting", true);
+        // }
+        // else {
+        //     muzzleFlash.SetActive(false);
+        //     anim.SetBool("Shooting", false);
+        // }
 
-        //Right Mouse Button
-        if (Input.GetMouseButtonDown(1) && fuel >= 1) {
-            flameStream.GetComponent<ParticleSystem>().Play();
-            anim.SetBool("Flamer", true);
-        }
-        else if (Input.GetMouseButtonUp(1) && fuel >= 1) {
-            flameStream.GetComponent<ParticleSystem>().Stop();
-            anim.SetBool("Flamer", false);
-        }
-        else if (fuel <= 0) {
-            flameStream.GetComponent<ParticleSystem>().Stop();
-            anim.SetBool("Flamer", false);
-        }
+        // //Right Mouse Button
+        // if (Input.GetMouseButtonDown(1) && fuel >= 1) {
+        //     flameStream.GetComponent<ParticleSystem>().Play();
+        //     anim.SetBool("Flamer", true);
+        // }
+        // else if (Input.GetMouseButtonUp(1) && fuel >= 1) {
+        //     flameStream.GetComponent<ParticleSystem>().Stop();
+        //     anim.SetBool("Flamer", false);
+        // }
+        // else if (fuel <= 0) {
+        //     flameStream.GetComponent<ParticleSystem>().Stop();
+        //     anim.SetBool("Flamer", false);
+        // }
 
-        if (Input.GetMouseButton(1) && fuel >= 1) {
-            if (Time.time > FTFireTimer) {
-                Instantiate(fireDamage, flameStream.transform.position, transform.rotation);
-                fuel -= 1;
-                FTFireTimer = Time.time + FTFireTime;
-            }
-        }
+        // if (Input.GetMouseButton(1) && fuel >= 1) {
+        //     if (Time.time > FTFireTimer) {
+        //         Instantiate(fireDamage, flameStream.transform.position, transform.rotation);
+        //         fuel -= 1;
+        //         FTFireTimer = Time.time + FTFireTime;
+        //     }
+        // }
     }
 
     void Movement() {
@@ -100,6 +100,8 @@ public class PlayerAvatar : MonoBehaviour {
             playerPosition.z = playerPosition.z - moveSpeed * Time.deltaTime;
         }
 
+        if (Input.GetKey("w") && Input.GetKey("left shift")) { playerPosition.z = playerPosition.z + (moveSpeed * 1.05f) * Time.deltaTime; }
+
         //Strafing 
         if (Input.GetKey("a")) {
             playerPosition.x = playerPosition.x - moveSpeed * Time.deltaTime;
@@ -112,41 +114,41 @@ public class PlayerAvatar : MonoBehaviour {
         Vector3 moveVector = (playerPosition - transform.position).normalized;
         float direction = Vector3.Dot(moveVector, transform.forward);
 
-        //Relative Forwards
-        if (direction > 0.8f) {
-            anim.SetBool("Walking F", true);
-            anim.SetBool("Walking B", false);
-            anim.SetBool("Strafe R", false);
-            anim.SetBool("Strafe L", false);
-        }
-        //Relative Right
-        else if (direction < 0.8f && direction > 0) {
-            anim.SetBool("Walking F", false);
-            anim.SetBool("Walking B", false);
-            anim.SetBool("Strafe R", true);
-            anim.SetBool("Strafe L", false);
-        }
-        //Relative Backwards
-        else if (direction < -0.8f) {
-            anim.SetBool("Walking F", false);
-            anim.SetBool("Walking B", true);
-            anim.SetBool("Strafe R", false);
-            anim.SetBool("Strafe L", false);
-        }
-        //Relative Left
-        else if (direction > -0.8f && direction < 0) {
-            anim.SetBool("Walking F", false);
-            anim.SetBool("Walking B", false);
-            anim.SetBool("Strafe R", false);
-            anim.SetBool("Strafe L", true);
-        }
-        //Turn off all anims
-        else {
-            anim.SetBool("Walking F", false);
-            anim.SetBool("Walking B", false);
-            anim.SetBool("Strafe R", false);
-            anim.SetBool("Strafe L", false);
-        }
+        // //Relative Forwards
+        // if (direction > 0.8f) {
+        //     anim.SetBool("Walking F", true);
+        //     anim.SetBool("Walking B", false);
+        //     anim.SetBool("Strafe R", false);
+        //     anim.SetBool("Strafe L", false);
+        // }
+        // //Relative Right
+        // else if (direction < 0.8f && direction > 0) {
+        //     anim.SetBool("Walking F", false);
+        //     anim.SetBool("Walking B", false);
+        //     anim.SetBool("Strafe R", true);
+        //     anim.SetBool("Strafe L", false);
+        // }
+        // //Relative Backwards
+        // else if (direction < -0.8f) {
+        //     anim.SetBool("Walking F", false);
+        //     anim.SetBool("Walking B", true);
+        //     anim.SetBool("Strafe R", false);
+        //     anim.SetBool("Strafe L", false);
+        // }
+        // //Relative Left
+        // else if (direction > -0.8f && direction < 0) {
+        //     anim.SetBool("Walking F", false);
+        //     anim.SetBool("Walking B", false);
+        //     anim.SetBool("Strafe R", false);
+        //     anim.SetBool("Strafe L", true);
+        // }
+        // //Turn off all anims
+        // else {
+        //     anim.SetBool("Walking F", false);
+        //     anim.SetBool("Walking B", false);
+        //     anim.SetBool("Strafe R", false);
+        //     anim.SetBool("Strafe L", false);
+        // }
 
         transform.position = playerPosition;
         rb.velocity = new Vector3(0,0,0);   //Freeze velocity
@@ -158,16 +160,16 @@ public class PlayerAvatar : MonoBehaviour {
         health -= damage;
 
         if (health <= 0) {
-            //Disable irrelvant animation bools
+            //Disable irrelevant animation bools
             anim.SetBool("Dead", true);
-            anim.SetBool("Shooting", false);
-            muzzleFlash.SetActive(false);
-            anim.SetBool("Flamer", false);
-            flameStream.GetComponent<ParticleSystem>().Stop();
-            anim.SetBool("Walking F", false);
-            anim.SetBool("Walking B", false);
-            anim.SetBool("Strafe R", false);
-            anim.SetBool("Strafe L", false);
+            // anim.SetBool("Shooting", false);
+            // muzzleFlash.SetActive(false);
+            // anim.SetBool("Flamer", false);
+            // flameStream.GetComponent<ParticleSystem>().Stop();
+            // anim.SetBool("Walking F", false);
+            // anim.SetBool("Walking B", false);
+            // anim.SetBool("Strafe R", false);
+            // anim.SetBool("Strafe L", false);
             GameManager.instance.playerDead = true;
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }

@@ -6,26 +6,28 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour {
 
     NavMeshAgent agent;
+    Animator animator;
+
+    public float stoppingDistance; // 1 for melee so no clip, 5-10 for ranged??
 
     public GameObject player;
 
     public float health = 10.0f;
-
     public float agroRange = 10.0f;
     public float damage = 5.0f;
 
-    //Rotation vars
+    // Rotation vars
     public float rotationSpeed;
     private float adjRotSpeed;
     public Quaternion targetRotation;
 
-    //Laser Damage
+    // Laser Damage
     public GameObject laser;
     public GameObject laserMuzzle;
     private float laserTimer;
     private float laserTime = 1.0f;
 
-    //Collision Damage
+    // Collision Damage
     private float damageTimer;
     private float damageTime = 0.5f;
 
@@ -35,14 +37,14 @@ public class Enemy : MonoBehaviour {
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponentInChildren<Animator>(); // Get the Animator component from a child object.
     }
 
     // Update is called once per frame
     void Update() {
-
         Behaviour();
 
-        //Kill check - moved from takeDamage due to bug
+        // Kill check - moved from takeDamage due to bug
         if (health <= 0) {
             Instantiate(explosion, transform.position, transform.rotation);
             Destroy(this.gameObject);
@@ -50,47 +52,47 @@ public class Enemy : MonoBehaviour {
     }
 
     void Behaviour() {
-
         if (!player)
             player = GameObject.FindGameObjectWithTag("Player");
         else if (player && !GameManager.instance.playerDead) {
-
-            //Raycast in direction of Player
+            
+            // Raycast in direction of Player
             RaycastHit hit;
             if (Physics.Raycast(transform.position, -(transform.position - player.transform.position).normalized, out hit, agroRange)) {
-
-                //If Raycast hits player
+                // If Raycast hits player
                 if (hit.transform.tag == "Player") {
-
                     Debug.DrawLine(transform.position, player.transform.position, Color.red);
-
-                    //Rotate slowly towards player
+                    // Rotate slowly towards player
                     targetRotation = Quaternion.LookRotation(player.transform.position - transform.position);
                     adjRotSpeed = Mathf.Min(rotationSpeed * Time.deltaTime, 1);
                     transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, adjRotSpeed);
-
-                    //Move towards player
-                    if (Vector3.Distance(player.transform.position, transform.position) >= 5) {
+                    // Move towards player
+                    if (Vector3.Distance(player.transform.position, transform.position) >= stoppingDistance) {
                         agent.SetDestination(player.transform.position);
+                        // Set "Run" parameter to true in the Animator
+                        animator.SetBool("Run", true);
                     }
-                    //Stop if close to player
-                    else if (Vector3.Distance(player.transform.position, transform.position) < 5) {
+                    // Stop if close to player
+                    else if (Vector3.Distance(player.transform.position, transform.position) < stoppingDistance) {
                         agent.SetDestination(transform.position);
+                        // Set "Run" parameter to false in the Animator
+                        animator.SetBool("Run", false);
                     }
-
-                    //Fire Laser
-                    if (Time.time > laserTimer) {
-                        Instantiate(laser, laserMuzzle.transform.position, laserMuzzle.transform.rotation);
-                        laserTimer = Time.time + laserTime;
-                    }
+                    // Fire Laser
+                    // if (Time.time > laserTimer) {
+                    //     Instantiate(laser, laserMuzzle.transform.position, laserMuzzle.transform.rotation);
+                    //     laserTimer = Time.time + laserTime;
+                    // }
                 }
+            }
+            else {
+                // If the player is not in agro range, set "Run" parameter to false.
+                animator.SetBool("Run", false);
             }
         }
     }
 
-
     private void OnCollisionStay(Collision collision) {
-
         if (collision.transform.tag == "Player" && Time.time > damageTimer) {
             collision.transform.GetComponent<PlayerAvatar>().takeDamage(damage);
             damageTimer = Time.time + damageTime;
@@ -98,8 +100,6 @@ public class Enemy : MonoBehaviour {
     }
 
     public void takeDamage(float thisDamage) {
-
         health -= thisDamage;
     }
-
 }
