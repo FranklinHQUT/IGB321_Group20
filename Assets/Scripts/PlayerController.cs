@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PlayerController : MonoBehaviour
     int isDeadHash;
     int isBeingHitHash;
 
+    // current level
+    int currentLevel = 0;
+
     // Sword and Player
     public GameObject Kopesh;
     public GameObject avatar;
@@ -22,6 +26,11 @@ public class PlayerController : MonoBehaviour
     // Health and dead?
     public float health = 100.0f;
     private bool dead = false;
+
+    // Attack
+    public float areaDamageRadius = 5.0f;
+    public float damage = 10.0f;
+    public GameObject raycastAnchor;
 
     // Movement
     public float moveSpeed = 5;
@@ -57,10 +66,6 @@ public class PlayerController : MonoBehaviour
         isBeingHitHash = Animator.StringToHash("isGettingHit");
 
         rb = GetComponent<Rigidbody>();
-
-        // start with isRunning as false by def
-        isRunning = false;
-
     }
 
     void Update()
@@ -82,6 +87,9 @@ public class PlayerController : MonoBehaviour
         isRight = Input.GetKey("d");
         isAttacking = Input.GetMouseButtonDown(0);
         isMagic = Input.GetMouseButtonDown(1);
+
+        if (isMagic) { HideKopesh(); }
+
     }
 
     void Movement()
@@ -92,37 +100,38 @@ public class PlayerController : MonoBehaviour
         if (isWalking)
         {
             playerPosition.z = playerPosition.z + moveSpeed * Time.deltaTime;
-            Debug.Log("is walking");
+            // Debug.Log("is walking");
         }
         else if (isBackward)
         {
             playerPosition.z = playerPosition.z - moveSpeed * Time.deltaTime;
-            Debug.Log("is backward");
+            // Debug.Log("is backward");
         }
 
         // Running
-        if (isRunning) { playerPosition.z = playerPosition.z + (moveSpeed * 1.1f) * Time.deltaTime; Debug.Log("is running"); }
+        if (isRunning) { playerPosition.z = playerPosition.z + (moveSpeed * 1.1f) * Time.deltaTime; }// Debug.Log("is running"); }
 
         // Strafing
         if (isLeft)
         {
             playerPosition.x = playerPosition.x - moveSpeed * Time.deltaTime;
-            Debug.Log("is left");
+            // Debug.Log("is left");
         }
         else if (isRight)
         {
             playerPosition.x = playerPosition.x + moveSpeed * Time.deltaTime;
-            Debug.Log("is right");
+            // Debug.Log("is right");
         }
+        
+        // Attack
+        animator.SetBool(isAttackingHash, isAttacking); 
 
-        // Check for attacking when left mouse button is clicked, check kopesh is turned on, turn on if not already
-        if (isAttacking) { animator.SetBool(isAttackingHash, isAttacking); Debug.Log("is attacking"); }
-        else if (!isAttacking) { animator.SetBool(isAttackingHash, !isAttacking); }
-
-        // Check for using magic when right mouse button is clicked, turn off Kopesh whilst magicking
-        if (Input.GetMouseButtonDown(1) && !isMagic) { animator.SetBool(isMagicHash, isMagic); Debug.Log("is magicking");}
-        if (Input.GetMouseButtonUp(1) && isMagic) { animator.SetBool(isMagicHash, !isMagic); }
-        if (isMagic) { HideKopesh(true); } else if (!isMagic) { HideKopesh(false); }
+        // if moving at all, set that movement to false if attacking too.  or, if just attacking turn off animations
+        if (((isLeft || isRight || isRunning || isWalking || isBackward) && isAttacking) || isAttacking)
+        {
+            isLeft = false; isRight = false; isRunning = false; isWalking = false; isBackward = false;
+            DealAreaDamage();
+        }
 
         transform.position = playerPosition;
         rb.velocity = new Vector3(0, 0, 0); // Freeze velocity
@@ -136,26 +145,32 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(isBackwardHash, isBackward);
         animator.SetBool(isRightHash, isRight);
         animator.SetBool(isAttackingHash, isAttacking);
-        animator.SetBool(isMagicHash, isMagic);
-
-        HideKopesh(isMagic);
+        animator.SetBool(isMagicHash, isMagic);        
     }
 
-    public void HideKopesh(bool hideOrNot)
+    public void HideKopesh()
     {
-        Kopesh.SetActive(!hideOrNot);
+        Kopesh.SetActive(false);
+        HideForDelay(0.8f);
+        Kopesh.SetActive(true);    
+
+    }
+
+    private IEnumerator HideForDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
     }
 
     public void takeDamage(float damage)
     {
         health -= damage; 
-        Debug.Log("is damaged");       
+        // Debug.Log("is damaged");       
         animator.SetBool(isBeingHitHash, isBeingHit);
 
         if (health <= 0)
         {
             isDead = true;
-            Debug.Log("is dead");
+            // Debug.Log("is dead");
 
             animator.SetBool(isDeadHash, isDead);
             animator.SetBool(isWalkingHash, false);
@@ -174,10 +189,43 @@ public class PlayerController : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        int nextLevel = currentLevel + 1;
+
         if (other.tag == "Goal")
         {
             GameManager.instance.levelComplete = true;
-            StartCoroutine(GameManager.instance.LoadLevel(GameManager.instance.nextLevel));
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            // StartCoroutine(GameManager.instance.LoadLevel(GameManager.instance.nextLevel));
+            // currentLevel++;
         }
+    }
+
+    void DealAreaDamage()
+    {
+        // Define a ray in the forward direction of the player
+        Ray ray = new Ray(raycastAnchor.transform.position, raycastAnchor.transform.forward);
+
+        // Create a RaycastHit variable to store information about the hit
+        RaycastHit hit;
+
+        // Cast the ray and check for collisions up to a specified distance (e.g., X units)
+        if (Physics.Raycast(ray, out hit, areaDamageRadius))
+        {
+            // Check if the collided object is an enemy
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+
+            if (enemy != null)
+            {
+                // Deal damage to the enemy
+                enemy.takeDamage(damage);
+            }
+        }
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, areaDamageRadius);
     }
 }

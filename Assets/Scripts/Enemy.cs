@@ -11,10 +11,13 @@ public class Enemy : MonoBehaviour {
     // Animations
     int isMovingHash;
     int isAttackingHash;
+    int isDeadHash;
+    bool isDead;
 
     float distToPlayer;
 
     public float stoppingDistance; // 1 for melee so no clip, 5-10 for ranged??
+    public float startingDistance;
 
     public GameObject player;
 
@@ -42,22 +45,28 @@ public class Enemy : MonoBehaviour {
         // Animations
         isMovingHash = Animator.StringToHash("Run");
         isAttackingHash = Animator.StringToHash("Atack_0");
+        isDeadHash = Animator.StringToHash("Die");
 
         if (!player) { player = GameObject.FindGameObjectWithTag("Player"); }
 
     }
 
     void Update() {
-        Behaviour();
+        if (isDead == false) { Behaviour(); }
 
         // Kill check - moved from takeDamage due to bug
-        if (health <= 0) {
-            Destroy(this.gameObject);
+        if (health <= 0)
+        {
+            isDead = true;
+            animator.SetBool(isDeadHash, true);
+            animator.SetBool(isMovingHash, false);
+            animator.SetBool(isAttackingHash, false);
+            StartCoroutine(DestroyPlayerAfterDelay(2.0f));
         }
     }
 
     void Behaviour() {
-        if (player && !GameManager.instance.playerDead) {
+        if (player && !GameManager.instance.playerDead && !isDead) {
             
             // Raycast in direction of Player
             RaycastHit hit;
@@ -72,24 +81,30 @@ public class Enemy : MonoBehaviour {
                     adjRotSpeed = Mathf.Min(rotationSpeed * Time.deltaTime, 1);
                     transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, adjRotSpeed);
                     // Move towards player
-                    if (distToPlayer >= stoppingDistance) {
+                    if (distToPlayer >= startingDistance) {
                         agent.SetDestination(player.transform.position);
                         animator.SetBool(isMovingHash, true);
+                        //Debug.Log("started moving");
                     }
                     // Stop if close to player
                     else if (distToPlayer < stoppingDistance) { // if distance is less than stopping distance
                         agent.SetDestination(transform.position);
+                        //Debug.Log("stopped moving");
                         animator.SetBool(isMovingHash, false);
 
-                        // attack
-                        animator.SetBool(isAttackingHash, true);
-                        if (Time.time > damageTimer)
+                        if (distToPlayer < 2.8)
                         {
-                            hit.transform.GetComponent<PlayerController>().takeDamage(damage);
-                            damageTimer = Time.time + meleeTime;;
+                            // attack - attempt to simulate slower attack, so enemy stops, attacks, then only hits if in melee distance
+                            animator.SetBool(isAttackingHash, true);
+                            //Debug.Log("attacking");
+                            if (Time.time > damageTimer)
+                            {
+                                hit.transform.GetComponent<PlayerController>().takeDamage(damage);
+                                damageTimer = Time.time + meleeTime;;
 
+                            }
+                            else { animator.SetBool(isAttackingHash, false); }
                         }
-                        else { animator.SetBool(isAttackingHash, false); }
                     }
                 }
             }
@@ -102,5 +117,11 @@ public class Enemy : MonoBehaviour {
 
     public void takeDamage(float thisDamage) {
         health -= thisDamage;
+    }
+
+    private IEnumerator DestroyPlayerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(this.gameObject);
     }
 }
