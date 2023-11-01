@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private bool isBeingHit;
     private bool isDead;
 
+    public GameObject playerPrefab;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -195,8 +197,6 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.instance.levelComplete = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            // StartCoroutine(GameManager.instance.LoadLevel(GameManager.instance.nextLevel));
-            // currentLevel++;
         }
     }
 

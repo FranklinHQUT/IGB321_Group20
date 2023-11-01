@@ -6,15 +6,17 @@ public class IsometricCamera : MonoBehaviour {
 
     public GameObject player;
 
-    public float height;
-    public float zDisp;
+    public float height = 15;
+    public float zDisp = 3;
 
-    public float cameraSpeed = 1.0f;
+    public float cameraSpeed = 2.0f;
     private Vector3 newCamPos;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         transform.position = new Vector3(transform.position.x, height, transform.position.z - zDisp);
+
+        if (player == null) { player = GameObject.FindWithTag("Player"); }
 	}
 	
 	// Update is called once per frame

@@ -23,7 +23,7 @@ public class GUI : MonoBehaviour {
             healthbar.value = 0;
         }
         else if (player) {
-            healthbar.value = player.GetComponent<PlayerAvatar>().health;
+            healthbar.value = player.GetComponent<PlayerController>().health;
         }
 
 
