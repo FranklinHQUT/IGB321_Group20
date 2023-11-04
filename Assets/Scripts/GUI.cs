@@ -8,6 +8,7 @@ public class GUI : MonoBehaviour {
     GameObject player;
 
     public Slider healthbar;
+    public Slider manabar;
     public GameObject levelCompleteText;
 
 	// Use this for initialization
@@ -21,15 +22,25 @@ public class GUI : MonoBehaviour {
         if (!player) {
             player = GameObject.FindGameObjectWithTag("Player");
             healthbar.value = 0;
+            manabar.value = 0;
         }
         else if (player) {
             healthbar.value = player.GetComponent<PlayerController>().health;
+            manabar.value = player.GetComponent<PlayerController>().mana;
         }
-
 
         //Level Status Text
         if (GameManager.instance.levelComplete)
+        {
             levelCompleteText.SetActive(true);
-
+            StartCoroutine(Pause(5, levelCompleteText));
+        }
+            
 	}
+
+    private IEnumerator Pause(float delay, GameObject obj)
+    {
+        yield return new WaitForSeconds(delay);
+        obj.SetActive(false);
+    }
 }

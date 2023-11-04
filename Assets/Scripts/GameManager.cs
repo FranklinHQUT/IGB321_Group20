@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     string thisLevel;
     public string nextLevel;
 
+    public bool isPaused;
+    public GameObject pausedText;
 
     // Awake Checks - Singleton setup
     void Awake() {
@@ -32,13 +34,20 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start () 
+    {
         thisLevel = SceneManager.GetActiveScene().name;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () 
+    {
+		if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPaused = !isPaused;
+            pausedText.SetActive(!isPaused);
+            PauseGame();
+        }
 	}
 
     public IEnumerator LoadLevel(string level) {
@@ -48,5 +57,10 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene(level);
     }
 
+    void PauseGame()
+    {
+        if (isPaused) { Time.timeScale = 0; }
+        else { Time.timeScale = 1; }
+    }
 
 }

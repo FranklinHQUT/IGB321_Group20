@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour {
     NavMeshAgent agent;
     Animator animator;
 
+    public GameObject burning;
+
     // Animations
     int isMovingHash;
     int isAttackingHash;
@@ -24,6 +26,9 @@ public class Enemy : MonoBehaviour {
     public float health = 10.0f;
     public float agroRange = 10.0f;
     public float damage = 5.0f;
+    public bool isRanged;
+    public float damageRange;
+    public GameObject particleSystem;
 
     // Rotation vars
     public float rotationSpeed;
@@ -32,11 +37,10 @@ public class Enemy : MonoBehaviour {
 
     // Damage
     private float meleeTimer;
-    private float meleeTime = 1.0f;
+    public float damageTime = 1.0f;
 
     // Collision Damage
     private float damageTimer;
-    private float damageTime = 0.5f;
 
     void Start () {
         agent = GetComponent<NavMeshAgent>();
@@ -92,7 +96,7 @@ public class Enemy : MonoBehaviour {
                         //Debug.Log("stopped moving");
                         animator.SetBool(isMovingHash, false);
 
-                        if (distToPlayer < 2.8)
+                        if (distToPlayer < damageRange)
                         {
                             // attack - attempt to simulate slower attack, so enemy stops, attacks, then only hits if in melee distance
                             animator.SetBool(isAttackingHash, true);
@@ -100,7 +104,8 @@ public class Enemy : MonoBehaviour {
                             if (Time.time > damageTimer)
                             {
                                 hit.transform.GetComponent<PlayerController>().takeDamage(damage);
-                                damageTimer = Time.time + meleeTime;;
+                                if (isRanged) { particleSystem.SetActive(true); }
+                                damageTimer = Time.time + damageTime;
 
                             }
                             else { animator.SetBool(isAttackingHash, false); }

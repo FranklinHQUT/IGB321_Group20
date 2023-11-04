@@ -29,8 +29,10 @@ public class PlayerController : MonoBehaviour
 
     // Attack
     public float areaDamageRadius = 5.0f;
-    public float damage = 10.0f;
+    public float meleeDamage = 10.0f;
     public GameObject raycastAnchor;
+    public GameObject magicAnchor;
+    public GameObject fireStream;
 
     // Movement
     public float moveSpeed = 5;
@@ -50,6 +52,11 @@ public class PlayerController : MonoBehaviour
 
     public GameObject playerPrefab;
 
+    ParticleSystem particle;
+    public GameObject magicDamage;
+    public bool hasRing;
+    public int mana = 100;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -68,6 +75,10 @@ public class PlayerController : MonoBehaviour
         isBeingHitHash = Animator.StringToHash("isGettingHit");
 
         rb = GetComponent<Rigidbody>();
+        particle = fireStream.GetComponent<ParticleSystem>();
+        particle.Stop();
+
+        // fireStream.GetComponent<ParticleSystem>().Stop();
     }
 
     void Update()
@@ -76,6 +87,7 @@ public class PlayerController : MonoBehaviour
         {
             HandleInput();
             Movement();
+            Shooting();
             UpdateAnimationState();
         }
     }
@@ -88,10 +100,7 @@ public class PlayerController : MonoBehaviour
         isBackward = Input.GetKey("s");
         isRight = Input.GetKey("d");
         isAttacking = Input.GetMouseButtonDown(0);
-        isMagic = Input.GetMouseButtonDown(1);
-
-        if (isMagic) { HideKopesh(); }
-
+        isMagic = (Input.GetMouseButton(1) && hasRing);
     }
 
     void Movement()
@@ -128,13 +137,6 @@ public class PlayerController : MonoBehaviour
         // Attack
         animator.SetBool(isAttackingHash, isAttacking); 
 
-        // if moving at all, set that movement to false if attacking too.  or, if just attacking turn off animations
-        if (((isLeft || isRight || isRunning || isWalking || isBackward) && isAttacking) || isAttacking)
-        {
-            isLeft = false; isRight = false; isRunning = false; isWalking = false; isBackward = false;
-            DealAreaDamage();
-        }
-
         transform.position = playerPosition;
         rb.velocity = new Vector3(0, 0, 0); // Freeze velocity
     }
@@ -148,6 +150,29 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(isRightHash, isRight);
         animator.SetBool(isAttackingHash, isAttacking);
         animator.SetBool(isMagicHash, isMagic);        
+    }
+
+    void Shooting()
+    {
+        // if moving at all, set that movement to false if attacking too.  or, if just attacking turn off animations
+        if (((isLeft || isRight || isRunning || isWalking || isBackward) && isAttacking) || isAttacking)
+        {
+            isLeft = false; isRight = false; isRunning = false; isWalking = false; isBackward = false;
+            DealAreaDamage();
+        }
+
+        if (isMagic && (mana > 0)) 
+        { 
+            mana -= 1;
+            isLeft = false; isRight = false; isRunning = false; isWalking = false; isBackward = false;
+            HideKopesh(); 
+            Instantiate(magicDamage, magicAnchor.transform.position, transform.rotation);
+            particle.Play();
+        }
+        else { 
+            particle.Stop(); 
+            isMagic = false;
+        }
     }
 
     public void HideKopesh()
@@ -217,7 +242,7 @@ public class PlayerController : MonoBehaviour
             if (enemy != null)
             {
                 // Deal damage to the enemy
-                enemy.takeDamage(damage);
+                enemy.takeDamage(meleeDamage);
             }
         }
     }
@@ -227,5 +252,11 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, areaDamageRadius);
+    }
+
+    private IEnumerator DestroyAfterDelay(float delay, GameObject objectToDestroy)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(objectToDestroy);
     }
 }

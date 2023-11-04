@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1050587254389495605}
   - component: {fileID: 6708251347283013751}
+  - component: {fileID: 335593049454477481}
   - component: {fileID: 2330010663929945794}
   - component: {fileID: 5847454477755528402}
   - component: {fileID: 7541337087596604636}
@@ -58,6 +59,27 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &335593049454477481
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8586285238963148310}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: ca8d8a5559861f1439ed63d88e6446f1, type: 3}
+  m_Controller: {fileID: 9100000, guid: d4d86d7c0c89dd549a4f0fc816195261, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!65 &2330010663929945794
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -118,14 +140,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec62dada8c408834a8ff7945e57a77fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  burning: {fileID: 0}
   stoppingDistance: 2
   startingDistance: 4
   player: {fileID: 0}
-  health: 50
-  agroRange: 10
+  health: 40
+  agroRange: 8
   damage: 5
+  isRanged: 0
+  damageRange: 28
+  particleSystem: {fileID: 0}
   rotationSpeed: 5
   targetRotation: {x: 0, y: 0, z: 0, w: 1}
+  damageTime: 1
 --- !u!1001 &2473766794740160676
 PrefabInstance:
   m_ObjectHideFlags: 0
