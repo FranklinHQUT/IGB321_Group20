@@ -247,6 +247,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void PickedUpRing() {
+        hasRing = true;
+    }
 
     private void OnDrawGizmos()
     {

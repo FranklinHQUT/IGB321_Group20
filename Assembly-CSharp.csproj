@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\FireDamage.cs" />
     <Compile Include="Assets\Scripts\GUI.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\RingPickUp.cs" />
     <Compile Include="Assets\Prefabs\Mechanics Base\Effects\ParticlePack\Shared\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\killobject.cs" />
     <Compile Include="Assets\Scripts\animTest.cs" />
