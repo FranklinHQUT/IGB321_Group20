@@ -1,19 +1,24 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{a193fd47-f613-7085-b97e-4b34e7ced858}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{47FD93A1-13F6-8570-B97E-4B34E7CED858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{d597297a-006e-7249-4bde-6c987f281c29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{7A2997D5-6E00-4972-4BDE-6C987F281C29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{a193fd47-f613-7085-b97e-4b34e7ced858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{a193fd47-f613-7085-b97e-4b34e7ced858}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{d597297a-006e-7249-4bde-6c987f281c29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{d597297a-006e-7249-4bde-6c987f281c29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FD93A1-13F6-8570-B97E-4B34E7CED858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FD93A1-13F6-8570-B97E-4B34E7CED858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FD93A1-13F6-8570-B97E-4B34E7CED858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FD93A1-13F6-8570-B97E-4B34E7CED858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A2997D5-6E00-4972-4BDE-6C987F281C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2997D5-6E00-4972-4BDE-6C987F281C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2997D5-6E00-4972-4BDE-6C987F281C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2997D5-6E00-4972-4BDE-6C987F281C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
