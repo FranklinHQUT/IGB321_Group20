@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -249,6 +250,11 @@ public class PlayerController : MonoBehaviour
 
     public void PickedUpRing() {
         hasRing = true;
+    }
+
+
+    public void Teleport(float x, float y, float z) {
+        transform.position = new Vector3(x, y, z);
     }
 
     private void OnDrawGizmos()
