@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 30310480796570206}
   - component: {fileID: 298429887882269537}
+  - component: {fileID: 7485729461972713000}
+  - component: {fileID: 5126404984664527546}
   m_Layer: 0
   m_Name: Dead Mummy
   m_TagString: Enemy
@@ -41,9 +43,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7082771772863794084}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: ca8d8a5559861f1439ed63d88e6446f1, type: 3}
-  m_Controller: {fileID: 9100000, guid: d4d86d7c0c89dd549a4f0fc816195261, type: 2}
+  m_Controller: {fileID: 9100000, guid: 282b1036cd6a1ba4d9a3b5d80a96fd52, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -54,6 +56,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &7485729461972713000
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7082771772863794084}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 217240cd5fe3c754cb7fe9c6ee26b8a8, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 217240cd5fe3c754cb7fe9c6ee26b8a8, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &5126404984664527546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7082771772863794084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81974f22723c23644abae1ced2148027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7715102829765611268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -147,6 +177,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9585562, guid: 45f49c7ca97226a47b9b389e4e63d1f0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 282b1036cd6a1ba4d9a3b5d80a96fd52, type: 2}
+    - target: {fileID: 9585562, guid: 45f49c7ca97226a47b9b389e4e63d1f0, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
@@ -154,8 +188,33 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 180832, guid: 45f49c7ca97226a47b9b389e4e63d1f0, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 123414, guid: 45f49c7ca97226a47b9b389e4e63d1f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5121344442435674902}
   m_SourcePrefab: {fileID: 100100000, guid: 45f49c7ca97226a47b9b389e4e63d1f0, type: 3}
+--- !u!1 &7715102829765700882 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 123414, guid: 45f49c7ca97226a47b9b389e4e63d1f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 7715102829765611268}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &5121344442435674902
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7715102829765700882}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 217240cd5fe3c754cb7fe9c6ee26b8a8, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!4 &7715102829765796960 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 486244, guid: 45f49c7ca97226a47b9b389e4e63d1f0,

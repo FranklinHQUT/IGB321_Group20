@@ -9,10 +9,10 @@ public class Health: Pickup {
     public override void OnTriggerEnter(Collider other) {
         
         if(other.tag == "Player") {
-            other.transform.GetComponent<PlayerAvatar>().health += health;
+            other.transform.GetComponent<PlayerController>().health += health;
 
-            if (other.transform.GetComponent<PlayerAvatar>().health > 100)
-                other.transform.GetComponent<PlayerAvatar>().health = 100;
+            if (other.transform.GetComponent<PlayerController>().health > 100)
+                other.transform.GetComponent<PlayerController>().health = 100;
 
             Destroy(this.gameObject);
         }
