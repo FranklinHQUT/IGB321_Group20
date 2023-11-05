@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\From Asset Store\Particle Dissolve Shader by Moonflower Carnivore\Scripts\PDS_GameController.cs" />
     <Compile Include="Assets\Prefabs\Mechanics Base\Effects\ParticlePack\Shared\Scripts\AdjustTimeScale.cs" />
+    <Compile Include="Assets\Scripts\FPSLimiter.cs" />
     <Compile Include="Assets\Scripts\FireDamage.cs" />
     <Compile Include="Assets\Scripts\GUI.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
